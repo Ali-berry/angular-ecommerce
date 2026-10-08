@@ -1,1 +1,13 @@
-<p>header works!</p>
+<header class="header">
+  <a routerLink="/" class="logo">ShopEase</a>
+
+  <button class="menu-btn" (click)="toggleMenu()">☰</button>
+
+  <!-- mobile pe menu tab dikhega jab menuOpen true ho, link click pe band ho jayega -->
+  <nav [class.open]="menuOpen" (click)="menuOpen = false">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/products" routerLinkActive="active">Shop</a>
+    <a routerLink="/contact" routerLinkActive="active">Contact</a>
+    <a routerLink="/cart" routerLinkActive="active" class="cart-btn">🛒 Cart</a>
+  </nav>
+</header>
