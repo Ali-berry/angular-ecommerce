@@ -1,9 +1,27 @@
 import { Component } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  imports: [],
   selector: 'app-contact',
-  styleUrl: './contact.css',
+  imports: [NgIf, FormsModule],
   templateUrl: './contact.html',
+  styleUrl: './contact.css'
 })
-export class Contact {}
+export class Contact {
+  submitted = false;
+
+  form = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
+
+  onSubmit() {
+    this.submitted = true;
+    setTimeout(() => this.submitted = false, 4000);
+    this.form = { firstName: '', lastName: '', email: '', subject: '', message: '' };
+  }
+}

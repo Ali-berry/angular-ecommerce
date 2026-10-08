@@ -1,1 +1,91 @@
-<p>products works!</p>
+<div class="shop-layout">
+
+  <!-- Mobile filter toggle -->
+  <button class="filter-toggle" (click)="sidebarOpen = !sidebarOpen">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="8" y1="12" x2="20" y2="12"/>
+      <line x1="12" y1="18" x2="20" y2="18"/>
+    </svg>
+    Filters
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <h3>Filters</h3>
+
+    <div class="filter-group">
+      <label>Category</label>
+      <ul class="cat-list">
+        <li *ngFor="let cat of categories"
+            [class.active]="cat === selectedCategory()"
+            (click)="setCategory(cat)">{{ cat }}</li>
+      </ul>
+    </div>
+
+    <div class="filter-group">
+      <label>Max Price: <strong>Rs. {{ maxPrice() }}</strong></label>
+      <input type="range" min="500" max="10000" step="100"
+             [value]="maxPrice()" (input)="onPrice($event)" />
+    </div>
+
+    <div class="filter-group">
+      <label>Min Rating</label>
+      <div class="rating-btns">
+        <button *ngFor="let r of [0,1,2,3,4]"
+                [class.active]="minRating() === r"
+                (click)="onRating(r)">
+          {{ r === 0 ? 'All' : r + '+' }}
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="toolbar">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search products…" (input)="onSearch($event)" />
+      </div>
+      <select (change)="onSort($event)">
+        <option value="newest">Newest</option>
+        <option value="low-high">Price: Low to High</option>
+        <option value="high-low">Price: High to Low</option>
+      </select>
+    </div>
+
+    <p class="result-count">{{ filtered().length }} products found</p>
+
+    <div class="product-grid" *ngIf="filtered().length > 0; else noResults">
+      <div class="product-card" *ngFor="let p of filtered()">
+        <a [routerLink]="['/products', p.id]" class="card-img-wrap">
+          <img [src]="p.img" [alt]="p.name" loading="lazy" />
+          <span class="badge" *ngIf="p.isNew">New</span>
+        </a>
+        <div class="card-body">
+          <span class="cat-tag">{{ p.category }}</span>
+          <h3>{{ p.name }}</h3>
+          <div class="stars">
+            <svg *ngFor="let s of stars(p.rating)"
+                 viewBox="0 0 24 24" [class]="s"
+                 width="14" height="14">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span>{{ p.rating }}</span>
+          </div>
+          <div class="card-footer">
+            <span class="price">Rs. {{ p.price.toLocaleString() }}</span>
+            <button class="add-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noResults>
+      <div class="no-results">No products match your filters.</div>
+    </ng-template>
+  </div>
+</div>
